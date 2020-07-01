@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Puzzle ciencia gallinero</title>
+    <script>
+/*
+MIT License
+
+Copyright (c) 2020 Oscar Triano García
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+    </script>
+    <script>
+        "use strict";
+
+        const NUMERO_GALLINAS = 100;
+        const IZQUIERDA = -1;
+        const DERECHA = 1;
+
+        function Gallina() {
+            this.picada = 0;
+            this.direccionPica = 0;
+        }
+
+        Gallina.prototype.reset = function() {
+            this.picada = 0;
+            this.direccionPica = 0;
+        }
+
+        Gallina.prototype.pica = function() {
+            this.direccionPica = Math.random() <= 0.5 ? IZQUIERDA : DERECHA;
+            return this.direccionPica; 
+        }
+
+        Gallina.prototype.picar = function() {
+            this.picada++;
+        }
+
+        Gallina.prototype.esPicada = function() {
+            return this.picada > 0;
+        }
+
+        function resetearGallinero(gallinero){
+            for (let i = 0; i < gallinero.length; i++) {
+                gallinero[i].reset();
+            }
+        }
+
+        function contarGallinasSinPicar(gallinero) {
+            let gallinas = 0;
+            for (let i = 0; i < gallinero.length; i++) {
+                if (!gallinero[i].esPicada()){
+                    gallinas++;
+                }
+            }
+            return gallinas;
+        }
+
+        function gallineroPicar(gallinas) {
+            for (let i = 0; i < NUMERO_GALLINAS; i++) {
+                const direccion = gallinas[i].pica();
+                console.debug("DIRECCION", direccion);
+                if (i == 0 && direccion == IZQUIERDA) {
+                    gallinas[NUMERO_GALLINAS-1].picar();
+                }
+                else if (i == (NUMERO_GALLINAS - 1) && direccion == DERECHA){
+                    gallinas[0].picar();
+                }
+                else {
+                    gallinas[i+direccion].picar();
+                }
+            }
+        }
+
+        function actualizar(gallinero){
+            const gallineroGrafico = document.getElementById("gallinero");
+            for (let i = 0; i < gallinero.length; i++) {
+                let contenido = "";
+                if (gallinero[i].direccionPica == IZQUIERDA) {
+                    contenido = `\u2190${gallinero[i].picada}`;
+                }
+                else if (gallinero[i].direccionPica == DERECHA) {
+                    contenido = `${gallinero[i].picada}\u2192`;
+                }
+                gallineroGrafico.children[i].innerText = contenido;
+            }
+        }
+
+        function onclickPicar() {
+            resetearGallinero(GALLINAS);
+            gallineroPicar(GALLINAS);
+            const sinPicar = contarGallinasSinPicar(GALLINAS);
+            document.getElementById("gallinassinpicar").innerText = `Gallinas sin picar ${sinPicar} de ${NUMERO_GALLINAS}`;
+            actualizar(GALLINAS);
+        }
+
+        const GALLINAS = new Array(NUMERO_GALLINAS);
+        for (let i = 0; i < NUMERO_GALLINAS; i++){
+            GALLINAS[i] = new Gallina();
+        }
+
+        window.addEventListener('load', (evt) => {
+            const gallinero = document.getElementById("gallinero");
+            for (let i = 0; i < NUMERO_GALLINAS; i++) {
+                const gallina = document.createElement("span");
+                gallina.innerText = "0";
+                gallinero.appendChild(gallina);
+            }
+        });
+
+    </script>
+    <style>
+        body{
+            text-align: center;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+            background-color: wheat;
+        }
+
+        #gallinero {
+            background-color: burlywood;
+            color: white;
+            padding-top: 1rem;
+            height: 4rem;
+            overflow-x: auto;
+        }
+
+        #gallinero span {
+            padding: 0.5rem;
+            text-align: center;
+            border: thin solid salmon;
+        }
+
+        blockquote {
+            max-width: 60rem;
+            margin-right: auto;
+            margin-left: auto;
+        }
+    </style>
+    </head>
+    <body>
+        <h1>Gallinero</h1>
+        <blockquote>En un gallinero 100 gallinas descansan tranquilamente formando un círculo. De repente, a cada gallina le da por picar a una de las que tiene al lado, a derecha o a izquierda, al azar. ¿Cuántas gallinas es de esperar que no sean picadas?<a href="https://twitter.com/ApuntesCiencia/status/1275860393072758784">#PuzzleCiencia</a></blockquote>
+        <p>Cada celda del gallinero es una gallina. Las flechas &larr; &rarr; indican hacia dónde pica la gallina. El número indica cuántas veces esa gallina ha sido picada. Esto es un gallinero circular.</p>
+        <p>Pulsa el botón "Simular" para ver los resultados cuantas veces quieras.</p>
+        <div id="gallinero">
+        </div>
+        <p><button type="button" onclick="onclickPicar()">Simular</button></p>
+        <p id="gallinassinpicar"></p>
+        <footer>
+            <small>Hecho por <a href="https://dotoscat.github.io/">Oscar Triano García</a></small>
+        </footer>
+    </body>
+</html>
