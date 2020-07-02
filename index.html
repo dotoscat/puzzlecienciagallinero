@@ -146,10 +146,16 @@ SOFTWARE.
             const controlIteraciones = document.getElementById("veriteracion");
             controlIteraciones.max = numeroVeces;
             controlIteraciones.value = 1;
-            controlIteraciones.readOnly = false;
+            controlIteraciones.disabled = false;
             document.getElementById("veriteraciontotal").innerText = numeroVeces;
             crearGraficoGallinero(numeroGallinas);
             actualizar(resultadosSimulaciones[1]);
+        }
+
+        function oninputVerIteracion(resultadosSimulaciones) {
+            const iteracion = +document.getElementById("veriteracion").value;
+            const gallinero = resultadosSimulaciones[iteracion-1];
+            actualizar(gallinero);
         }
 
     </script>
@@ -182,10 +188,6 @@ SOFTWARE.
             margin-right: auto;
             margin-left: auto;
         }
-
-        [readonly] {
-            background-color: lightgrey;
-        }
     </style>
     </head>
     <body>
@@ -211,7 +213,7 @@ SOFTWARE.
                 <div id="gallinero"></div>
                 <p>
                     <label for="veriteracion">Ver iteración </label>
-                    <input id="veriteracion" type="number" min="1" value="1" readonly> de <span id="veriteraciontotal">nada</span>
+                    <input id="veriteracion" type="number" min="1" value="1" oninput="oninputVerIteracion(resultadosSimulaciones)" disabled> de <span id="veriteraciontotal">nada</span>
                 </p>
                 <p id="minimo">Mínimo</p>
                 <p id="maximo">Máximo</p>
