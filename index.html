@@ -104,6 +104,9 @@ SOFTWARE.
 
         function crearGraficoGallinero(numeroGallinas) {
             const gallinero = document.getElementById("gallinero");
+            while(gallinero.childElementCount > 0){
+                gallinero.remove();
+            }
             for (let i = 0; i < numeroGallinas; i++) {
                 const gallina = document.createElement("span");
                 gallina.innerText = "0";
