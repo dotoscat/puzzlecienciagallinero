@@ -116,7 +116,16 @@ SOFTWARE.
 
         function onclickSimular() {
             numeroGallinas = +document.getElementById("numerogallinas").value;
+            const minNumeroGallinas = +document.getElementById("numerogallinas").min;
             numeroVeces = +document.getElementById("numeroveces").value;
+            if (numeroGallinas < minNumeroGallinas){
+                alert(`Escriba un número de gallinas superior o igual a ${minNumeroGallinas}`);
+                return;
+            }
+            if (numeroVeces <= 0){
+                alert("Escriba un número de veces superior a 0");
+                return;
+            }
             resultadosSimulaciones = new Array(numeroVeces);
 
             let totalGallinasSinPicar = 0;
@@ -205,7 +214,7 @@ SOFTWARE.
                 <legend>Ajustes</legend>
                 <p>
                     <label for="numerogallinas">Número de gallinas </label>
-                    <input id="numerogallinas" type="number" min="1" value="100">
+                    <input id="numerogallinas" type="number" min="3" value="100">
                 </p>
                 <p>
                     <label for="numeroveces">Nº de veces para simular </label>
