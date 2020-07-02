@@ -104,8 +104,8 @@ SOFTWARE.
 
         function crearGraficoGallinero(numeroGallinas) {
             const gallinero = document.getElementById("gallinero");
-            while(gallinero.childElementCount > 0){
-                gallinero.remove();
+            while(gallinero.firstChild){
+                gallinero.removeChild(gallinero.firstChild);
             }
             for (let i = 0; i < numeroGallinas; i++) {
                 const gallina = document.createElement("span");
@@ -149,7 +149,7 @@ SOFTWARE.
             controlIteraciones.readOnly = false;
             document.getElementById("veriteraciontotal").innerText = numeroVeces;
             crearGraficoGallinero(numeroGallinas);
-            actualizar(resultadosSimulaciones[1]);
+            actualizar(resultadosSimulaciones[0]);
         }
 
         function oninputVerIteracion(resultadosSimulaciones) {
