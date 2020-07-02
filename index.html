@@ -32,16 +32,14 @@ SOFTWARE.
     <script>
         "use strict";
 
-        const NUMERO_GALLINAS = 100;
         const IZQUIERDA = -1;
         const DERECHA = 1;
 
-        function Gallina() {
-            this.picada = 0;
-            this.direccionPica = 0;
-        }
+        let numeroGallinas = 100;
+        let numeroVeces = 1;
+        let resultadosSimulaciones = null;
 
-        Gallina.prototype.reset = function() {
+        function Gallina() {
             this.picada = 0;
             this.direccionPica = 0;
         }
@@ -59,12 +57,6 @@ SOFTWARE.
             return this.picada > 0;
         }
 
-        function resetearGallinero(gallinero){
-            for (let i = 0; i < gallinero.length; i++) {
-                gallinero[i].reset();
-            }
-        }
-
         function contarGallinasSinPicar(gallinero) {
             let gallinas = 0;
             for (let i = 0; i < gallinero.length; i++) {
@@ -76,13 +68,12 @@ SOFTWARE.
         }
 
         function gallineroPicar(gallinas) {
-            for (let i = 0; i < NUMERO_GALLINAS; i++) {
+            for (let i = 0; i < gallinas.length; i++) {
                 const direccion = gallinas[i].pica();
-                console.debug("DIRECCION", direccion);
                 if (i == 0 && direccion == IZQUIERDA) {
-                    gallinas[NUMERO_GALLINAS-1].picar();
+                    gallinas[gallinas.length-1].picar();
                 }
-                else if (i == (NUMERO_GALLINAS - 1) && direccion == DERECHA){
+                else if (i == (gallinas.length - 1) && direccion == DERECHA){
                     gallinas[0].picar();
                 }
                 else {
@@ -105,27 +96,58 @@ SOFTWARE.
             }
         }
 
-        function onclickPicar() {
-            resetearGallinero(GALLINAS);
-            gallineroPicar(GALLINAS);
-            const sinPicar = contarGallinasSinPicar(GALLINAS);
-            document.getElementById("gallinassinpicar").innerText = `Gallinas sin picar ${sinPicar} de ${NUMERO_GALLINAS}`;
-            actualizar(GALLINAS);
+        function iniciarGallinero(gallinero) {
+            for (let i = 0; i < gallinero.length; i++) {
+                gallinero[i] = new Gallina();
+            }
         }
 
-        const GALLINAS = new Array(NUMERO_GALLINAS);
-        for (let i = 0; i < NUMERO_GALLINAS; i++){
-            GALLINAS[i] = new Gallina();
-        }
-
-        window.addEventListener('load', (evt) => {
+        function crearGraficoGallinero(numeroGallinas) {
             const gallinero = document.getElementById("gallinero");
-            for (let i = 0; i < NUMERO_GALLINAS; i++) {
+            for (let i = 0; i < numeroGallinas; i++) {
                 const gallina = document.createElement("span");
                 gallina.innerText = "0";
                 gallinero.appendChild(gallina);
             }
-        });
+        }
+
+        function onclickSimular() {
+            numeroGallinas = +document.getElementById("numerogallinas").value;
+            numeroVeces = +document.getElementById("numeroveces").value;
+            resultadosSimulaciones = new Array(numeroVeces);
+
+            let totalGallinasSinPicar = 0;
+            let minimo = numeroGallinas;
+            let maximo = 0;
+
+            for(let i = 0; i < numeroVeces; i++){
+                resultadosSimulaciones[i] = new Array(numeroGallinas);
+                const gallinero = resultadosSimulaciones[i];
+                iniciarGallinero(gallinero);
+                gallineroPicar(gallinero);
+                const gallinasSinPicar = contarGallinasSinPicar(gallinero);
+                totalGallinasSinPicar += gallinasSinPicar;
+                if (gallinasSinPicar < minimo) {
+                    minimo = gallinasSinPicar;
+                }
+                if (gallinasSinPicar > maximo){
+                    maximo = gallinasSinPicar;
+                }
+            }
+
+            const promedio = totalGallinasSinPicar / numeroVeces;
+
+            document.getElementById("minimo").innerText = `Mínimo: ${minimo}`;
+            document.getElementById("maximo").innerText = `Máximo: ${maximo}`;
+            document.getElementById("promedio").innerText = `Promedio: ${promedio}`;
+            const controlIteraciones = document.getElementById("veriteracion");
+            controlIteraciones.max = numeroVeces;
+            controlIteraciones.value = 1;
+            controlIteraciones.readOnly = false;
+            document.getElementById("veriteraciontotal").innerText = numeroVeces;
+            crearGraficoGallinero(numeroGallinas);
+            actualizar(resultadosSimulaciones[1]);
+        }
 
     </script>
     <style>
@@ -157,6 +179,10 @@ SOFTWARE.
             margin-right: auto;
             margin-left: auto;
         }
+
+        [readonly] {
+            background-color: lightgrey;
+        }
     </style>
     </head>
     <body>
@@ -175,12 +201,15 @@ SOFTWARE.
                     <label for="numeroveces">Nº de veces para simular </label>
                     <input id="numeroveces" type="number" min="1" value="1">
                 </p>
-                <p><button type="button" onclick="onclickPicar()">Simular</button></p>
+                <p><button type="button" onclick="onclickSimular()">Simular</button></p>
             </fieldset>
             <fieldset id="resultados">
                 <legend>Resultados de gallinas sin picar</legend>
                 <div id="gallinero"></div>
-                <p><label for="veriteracion">Ver iteración </label><input id="veriteracion" type="number" min="1"></p>
+                <p>
+                    <label for="veriteracion">Ver iteración </label>
+                    <input id="veriteracion" type="number" min="1" value="1" readonly> de <span id="veriteraciontotal">nada</span>
+                </p>
                 <p id="minimo">Mínimo</p>
                 <p id="maximo">Máximo</p>
                 <p id="promedio">Promedio</p>
