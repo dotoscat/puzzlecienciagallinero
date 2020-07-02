@@ -136,11 +136,14 @@ SOFTWARE.
         }
 
         #gallinero {
+            max-width: 75vw;
             background-color: burlywood;
             color: white;
             padding-top: 1rem;
             height: 4rem;
             overflow-x: auto;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         #gallinero span {
@@ -161,10 +164,28 @@ SOFTWARE.
         <blockquote>En un gallinero 100 gallinas descansan tranquilamente formando un círculo. De repente, a cada gallina le da por picar a una de las que tiene al lado, a derecha o a izquierda, al azar. ¿Cuántas gallinas es de esperar que no sean picadas?<a href="https://twitter.com/ApuntesCiencia/status/1275860393072758784">#PuzzleCiencia</a></blockquote>
         <p>Cada celda del gallinero es una gallina. Las flechas &larr; &rarr; indican hacia dónde pica la gallina. El número indica cuántas veces esa gallina ha sido picada. Esto es un gallinero circular.</p>
         <p>Pulsa el botón "Simular" para ver los resultados cuantas veces quieras.</p>
-        <div id="gallinero">
-        </div>
-        <p><button type="button" onclick="onclickPicar()">Simular</button></p>
-        <p id="gallinassinpicar"></p>
+        <form>
+            <fieldset>
+                <legend>Ajustes</legend>
+                <p>
+                    <label for="numerogallinas">Número de gallinas </label>
+                    <input id="numerogallinas" type="number" min="3" value="100">
+                </p>
+                <p>
+                    <label for="numeroveces">Nº de veces para simular </label>
+                    <input id="numeroveces" type="number" min="1" value="1">
+                </p>
+                <p><button type="button" onclick="onclickPicar()">Simular</button></p>
+            </fieldset>
+            <fieldset id="resultados">
+                <legend>Resultados de gallinas sin picar</legend>
+                <div id="gallinero"></div>
+                <p><label for="veriteracion">Ver iteración </label><input id="veriteracion" type="number" min="1"></p>
+                <p id="minimo">Mínimo</p>
+                <p id="maximo">Máximo</p>
+                <p id="promedio">Promedio</p>
+            </fieldset>
+        </form>
         <footer>
             <small>Hecho por <a href="https://dotoscat.github.io/">Oscar Triano García</a></small>
         </footer>
