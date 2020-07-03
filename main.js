@@ -84,6 +84,8 @@ function actualizar(gallinero){
         }
         gallineroGrafico.children[i].innerText = contenido;
     }
+    const sinPicar = contarGallinasSinPicar(gallinero);
+    document.getElementById("sinpicariteracion").innerText = `Sin picar en esta iteracion: ${sinPicar}`;
 }
 
 function iniciarGallinero(gallinero) {
