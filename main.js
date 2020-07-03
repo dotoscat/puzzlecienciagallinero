@@ -155,6 +155,17 @@ function onclickSimular() {
 
 function oninputVerIteracion(resultadosSimulaciones) {
     const iteracion = +document.getElementById("veriteracion").value;
+    if(Number.isNaN(iteracion) || iteracion === "0") {
+        return;
+    }
+    if (iteracion < 0){
+        alert("Escriba una iteración mayor o igual a 1");
+        return;
+    }
+    if (iteracion > resultadosSimulaciones.length){
+        alert(`Escriba una iteración menor o igual que ${resultadosSimulaciones.length}`);
+        return;
+    }
     const gallinero = resultadosSimulaciones[iteracion-1];
     actualizar(gallinero);
 }
