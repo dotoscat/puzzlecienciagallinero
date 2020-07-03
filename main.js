@@ -155,7 +155,7 @@ function onclickSimular() {
 
 function oninputVerIteracion(resultadosSimulaciones) {
     const iteracion = +document.getElementById("veriteracion").value;
-    if(Number.isNaN(iteracion) || iteracion === "0") {
+    if(Number.isNaN(iteracion) || iteracion === 0) {
         return;
     }
     if (iteracion < 0){
